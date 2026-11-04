@@ -1,0 +1,98 @@
+[
+  {
+    "zh": "你好",
+    "pinyin": "nǐ hǎo",
+    "syl": [
+      "ni",
+      "hao"
+    ],
+    "emoji": "👋",
+    "tr": {
+      "en": "hello",
+      "fr": "bonjour",
+      "es": "hola",
+      "ru": "привет",
+      "ar": "مرحبًا"
+    }
+  },
+  {
+    "zh": "谢谢",
+    "pinyin": "xiè xie",
+    "syl": [
+      "xie",
+      "xie"
+    ],
+    "emoji": "🙏",
+    "tr": {
+      "en": "thank you",
+      "fr": "merci",
+      "es": "gracias",
+      "ru": "спасибо",
+      "ar": "شكرًا"
+    }
+  },
+  {
+    "zh": "再见",
+    "pinyin": "zài jiàn",
+    "syl": [
+      "zai",
+      "jian"
+    ],
+    "emoji": "👋",
+    "tr": {
+      "en": "goodbye",
+      "fr": "au revoir",
+      "es": "adiós",
+      "ru": "до свидания",
+      "ar": "وداعًا"
+    }
+  },
+  {
+    "zh": "老师",
+    "pinyin": "lǎo shī",
+    "syl": [
+      "lao",
+      "shi"
+    ],
+    "emoji": "👩‍🏫",
+    "tr": {
+      "en": "teacher",
+      "fr": "professeur",
+      "es": "profesor",
+      "ru": "учитель",
+      "ar": "معلم"
+    }
+  },
+  {
+    "zh": "学生",
+    "pinyin": "xué sheng",
+    "syl": [
+      "xue",
+      "sheng"
+    ],
+    "emoji": "🎓",
+    "tr": {
+      "en": "student",
+      "fr": "étudiant",
+      "es": "estudiante",
+      "ru": "студент",
+      "ar": "طالب"
+    }
+  },
+  {
+    "zh": "朋友",
+    "pinyin": "péng you",
+    "syl": [
+      "peng",
+      "you"
+    ],
+    "emoji": "🤝",
+    "tr": {
+      "en": "friend",
+      "fr": "ami",
+      "es": "amigo",
+      "ru": "друг",
+      "ar": "صديق"
+    }
+  }
+]

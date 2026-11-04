@@ -1,0 +1,29 @@
+{
+  "title": "Leçon 1 · Premières salutations",
+  "paragraphs": [
+    {
+      "zh": "你好！我叫小明。",
+      "pinyin": "Nǐ hǎo! Wǒ jiào Xiǎomíng.",
+      "fr": "Bonjour ! Je m'appelle Xiaoming.",
+      "en": "Hello! My name is Xiaoming."
+    },
+    {
+      "zh": "我是学生。",
+      "pinyin": "Wǒ shì xuéshēng.",
+      "fr": "Je suis étudiant.",
+      "en": "I am a student."
+    },
+    {
+      "zh": "这是我的老师。",
+      "pinyin": "Zhè shì wǒ de lǎoshī.",
+      "fr": "Voici mon professeur.",
+      "en": "This is my teacher."
+    },
+    {
+      "zh": "谢谢！再见！",
+      "pinyin": "Xièxie! Zàijiàn!",
+      "fr": "Merci ! Au revoir !",
+      "en": "Thank you! Goodbye!"
+    }
+  ]
+}

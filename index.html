@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mes flashcards | 30 leçons</title><meta name="description" content="Cours interactifs : mots, phrases, textes, pinyin, écoute et cartes mémoire.">
+<link rel="stylesheet" href="assets/site.css"></head>
+<body><div class="container">
+<header class="masthead"><div><h1>Elementary Listening 1</h1><p class="subheading">初级听力 1 · Mon espace d'apprentissage</p></div>
+<nav class="language-switch" id="langs" aria-label="Langue de l’interface"></nav></header>
+<a href="studio.html" class="banner"><span class="banner-icon">✦</span><span class="banner-text" id="bannerText">Créer des cartes, préparer une nouvelle leçon et exporter vos exercices</span><span class="banner-arrow">›</span></a>
+<p class="hint" id="hint">Choisissez une leçon et ouvrez ses mots, phrases ou textes. Les éléments gris ne sont pas encore disponibles.</p>
+<section class="toolbar" aria-label="Recherche et filtres"><input id="lessonSearch" type="search" class="search" placeholder="Rechercher une leçon (1–30)" aria-label="Chercher une leçon">
+<div class="toolbar-actions"><label class="check"><input id="onlyAvailable" type="checkbox"><span id="onlyAvailableText">Afficher les leçons disponibles</span></label><span class="small-muted" id="status"></span></div></section>
+<main class="lesson-grid" id="grid" aria-live="polite"></main><p class="empty-message" id="empty" hidden></p>
+<footer class="footer"><span id="footerText">Projet local : fichiers HTML, CSS et JavaScript · aucune base de données requise.</span><a href="studio.html" id="footerLink">Atelier de création ↗</a></footer>
+</div><script src="js/catalogue.js"></script><script src="js/app.js" defer></script></body></html>

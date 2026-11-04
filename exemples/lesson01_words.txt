@@ -1,0 +1,6 @@
+你好 | hello
+谢谢 | thank you
+再见 | goodbye
+老师 | teacher
+学生 | student
+朋友 | friend

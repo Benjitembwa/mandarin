@@ -1,0 +1,23 @@
+{
+  "title": "Leçon 2 · Au café",
+  "paragraphs": [
+    {
+      "zh": "你好！我要一杯茶。",
+      "pinyin": "Nǐ hǎo! Wǒ yào yì bēi chá.",
+      "fr": "Bonjour ! Je voudrais une tasse de thé.",
+      "en": "Hello! I would like a cup of tea."
+    },
+    {
+      "zh": "你要咖啡吗？",
+      "pinyin": "Nǐ yào kāfēi ma?",
+      "fr": "Tu veux du café ?",
+      "en": "Would you like coffee?"
+    },
+    {
+      "zh": "不要，谢谢。我要水。",
+      "pinyin": "Bú yào, xièxie. Wǒ yào shuǐ.",
+      "fr": "Non merci. Je voudrais de l'eau.",
+      "en": "No, thank you. I would like water."
+    }
+  ]
+}

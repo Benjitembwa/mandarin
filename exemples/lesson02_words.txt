@@ -1,0 +1,5 @@
+苹果 | apple
+水 | water
+面包 | bread
+茶 | tea
+咖啡 | coffee

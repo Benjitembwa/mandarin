@@ -1,0 +1,32 @@
+FLASHCARDS ECOLE - GUIDE RAPIDE
+==============================
+
+1) Decompressez cette archive ZIP dans un dossier de votre ordinateur.
+
+2) SOUS WINDOWS : double-cliquez sur « demarrer_windows.bat ».
+   Python 3 est necessaire ; il n'y a aucun paquet a installer.
+   Si votre navigateur ne s'ouvre pas, tapez : http://localhost:8000
+
+   SANS PYTHON : utilisez « ouvrir_sans_python.bat » pour les exemples
+   preinstalles. Les nouvelles lecons ne seront pas detectees automatiquement
+   tant que le site n'est pas servi en HTTP.
+
+3) Cliquez sur « Creer des cartes » pour ouvrir l'atelier.
+   - Entrez un numero de lecon entre 1 et 30.
+   - Entrez des mots chinois, par exemple : 你好 | hello
+   - Cliquez sur « Preparer sans Internet ».
+   - Completez les traductions dans le tableau.
+   - Cliquez sur « Telecharger l'exercice HTML ».
+   - Deposez le fichier obtenu dans le dossier « cards ».
+   - Actualisez l'accueil : le lien de la lecon devient accessible.
+
+4) Pour les textes, dupliquez « texts/lesson01.json » et renommez-le
+   « texts/lesson03.json » (pour la lecon 3), puis modifiez les phrases.
+
+5) Pour les details, consultez le fichier « README.md ».
+
+LECONS DE DEMONSTRATION : 1 et 2. Les autres lecons se remplissent
+progressivement avec VOS propres contenus.
+
+IMPORTANT : La traduction automatique utilise des services publics tiers ;
+elle n'est pas garantie. Le mode manuel hors connexion fonctionne toujours.

@@ -1,0 +1,70 @@
+[
+  {
+    "zh": "你好吗？",
+    "pinyin": "nǐ hǎo ma?",
+    "syl": [
+      "ni",
+      "hao",
+      "ma"
+    ],
+    "emoji": "🙂",
+    "tr": {
+      "en": "How are you?",
+      "fr": "Comment vas-tu ?",
+      "es": "¿Cómo estás?",
+      "ru": "Как дела?",
+      "ar": "كيف حالك؟"
+    }
+  },
+  {
+    "zh": "我很好。",
+    "pinyin": "wǒ hěn hǎo",
+    "syl": [
+      "wo",
+      "hen",
+      "hao"
+    ],
+    "emoji": "😊",
+    "tr": {
+      "en": "I am fine.",
+      "fr": "Je vais bien.",
+      "es": "Estoy bien.",
+      "ru": "У меня всё хорошо.",
+      "ar": "أنا بخير."
+    }
+  },
+  {
+    "zh": "谢谢你。",
+    "pinyin": "xiè xie nǐ",
+    "syl": [
+      "xie",
+      "xie",
+      "ni"
+    ],
+    "emoji": "🙏",
+    "tr": {
+      "en": "Thank you.",
+      "fr": "Merci à toi.",
+      "es": "Gracias.",
+      "ru": "Спасибо тебе.",
+      "ar": "شكرًا لك."
+    }
+  },
+  {
+    "zh": "明天见。",
+    "pinyin": "míng tiān jiàn",
+    "syl": [
+      "ming",
+      "tian",
+      "jian"
+    ],
+    "emoji": "🌅",
+    "tr": {
+      "en": "See you tomorrow.",
+      "fr": "À demain.",
+      "es": "Hasta mañana.",
+      "ru": "Увидимся завтра.",
+      "ar": "أراك غدًا."
+    }
+  }
+]

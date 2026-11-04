@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Leçon 1 · Phrases</title>
+<script>
+window.addEventListener('error', function (e) {
+  var b = document.getElementById('errBanner');
+  if (!b) return;
+  b.style.display = 'block';
+  b.textContent = '⚠️ Script error: ' + (e.message || e.error || 'Unknown error') +
+    (e.lineno ? ' (line ' + e.lineno + ')' : '') + '. Please make a screenshot of this page and send it to the teacher.';
+});
+</script>
+<style>
+  :root { --bg1: #6a11cb; --bg2: #2575fc; --card-w: 340px; --card-h: 470px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; color: #fff;
+    user-select: none; overflow: hidden; padding: 12px 16px;
+  }
+  .title { font-size: 18px; font-weight: 700; margin-bottom: 5px; text-shadow: 0 1px 2px rgba(0,0,0,.25); text-align: center; }
+  .counter { font-size: 13px; letter-spacing: .5px; margin-bottom: 10px; opacity: .92; text-shadow: 0 1px 2px rgba(0,0,0,.25); text-align: center; }
+  .counter b { font-size: 15px; }
+  .counter .sep { opacity: .5; margin: 0 4px; }
+  .score-line { font-weight: 600; }
+
+  .stage { perspective: 1400px; width: var(--card-w); overflow: visible; }
+  .card-wrapper { width: var(--card-w); height: var(--card-h); transition: transform .26s cubic-bezier(.4,0,.2,1); will-change: transform; }
+  .card {
+    width: var(--card-w); height: var(--card-h); position: relative;
+    cursor: pointer; transform-style: preserve-3d;
+    transition: transform .5s cubic-bezier(.2,.7,.3,1);
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute; inset: 0; border-radius: 22px;
+    display: flex; flex-direction: column;
+    align-items: center;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    padding: 20px 22px; box-shadow: 0 18px 50px rgba(0,0,0,.35);
+    text-align: center;
+  }
+  .front { background: #fff; color: #2b2b3a; }
+  .back { transform: rotateY(180deg); background: linear-gradient(135deg, #102a6e, #1b46b8); color: #fff; }
+  .content { flex: 1; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+  .controls { width: 100%; padding-top: 8px; }
+
+  /* 自适应字号 */
+  .w1 { font-size: 34px; } .w2 { font-size: 26px; } .w3 { font-size: 21px; } .w4 { font-size: 17px; } .w5 { font-size: 14px; }
+  .bw1 { font-size: 52px; } .bw2 { font-size: 40px; } .bw3 { font-size: 30px; } .bw4 { font-size: 23px; } .bw5 { font-size: 18px; }
+  .word { font-weight: 700; line-height: 1.25; word-break: break-word; }
+  .sub { font-size: 18px; opacity: .68; margin-top: 4px; line-height: 1.3; word-break: break-word; font-weight: 600; }
+  .emoji { font-size: 56px; line-height: 1; margin-bottom: 8px; filter: drop-shadow(0 5px 9px rgba(0,0,0,.18)); }
+  .listen-icon { font-size: 84px; line-height: 1; filter: drop-shadow(0 6px 10px rgba(0,0,0,.2)); margin-bottom: 4px; }
+
+  /* 拼音输入 */
+  .blanks { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; max-width: 296px; }
+  .pinyin-input {
+    width: 68px; height: 40px; border: 2px solid #dfe6e9; border-radius: 9px;
+    text-align: center; font-size: 16px; font-family: inherit; color: #2b2b3a;
+    background: #fafbfc; outline: none; transition: border-color .15s, background .15s;
+    user-select: text;
+  }
+  .blanks.dense .pinyin-input { width: 54px; height: 34px; font-size: 14px; }
+  .blanks.xdense .pinyin-input { width: 44px; height: 32px; font-size: 13px; }
+  .pinyin-input:focus { border-color: #0984e3; background: #fff; }
+  .pinyin-input.ok { border-color: #27ae60; background: #eafaf1; }
+  .pinyin-input.bad { border-color: #e74c3c; background: #fdeeee; }
+  .pinyin-input.miss { border-color: #f39c12; background: #fffaf0; }
+
+  .answer-line { margin-top: 8px; font-size: 13px; color: #0984e3; font-weight: 600; letter-spacing: .4px; }
+  .tip-line { margin-top: 6px; font-size: 11px; color: #b2bec3; min-height: 14px; }
+
+  /* 卡片内按钮 */
+  .btn-row { display: flex; gap: 7px; justify-content: center; }
+  .rate-btn {
+    border: none; color: #fff; padding: 9px 12px; border-radius: 9px;
+    font-size: 12.5px; cursor: pointer; font-family: inherit; font-weight: 600;
+    flex: 1; transition: transform .1s, opacity .2s; white-space: nowrap;
+  }
+  .rate-btn:active { transform: scale(.95); }
+  .rate-btn.red { background: #e74c3c; }
+  .rate-btn.yellow { background: #f39c12; }
+  .rate-btn.green { background: #27ae60; }
+  .ok-btn {
+    background: #0984e3; color: #fff; border: none; border-radius: 9px;
+    padding: 10px 26px; font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: transform .1s, background .2s;
+  }
+  .ok-btn:active { transform: scale(.95); }
+  .skip-link { margin-top: 7px; background: none; border: none; color: #b2bec3; font-size: 12px; cursor: pointer; font-family: inherit; text-decoration: underline; }
+  .skip-link:hover { color: #636e72; }
+
+  .back .label { font-size: 12px; letter-spacing: 3px; opacity: .7; margin-bottom: 10px; }
+  .back .meaning { font-weight: 700; letter-spacing: 1px; word-break: break-word; line-height: 1.25; }
+  .back .pinyin { margin-top: 12px; font-size: 16px; opacity: .9; letter-spacing: .5px; word-break: break-word; }
+  .back .explain { margin-top: 10px; font-size: 14px; opacity: .9; max-width: 280px; word-break: break-word; line-height: 1.35; }
+  .back .result-line { margin-top: 10px; font-size: 13px; opacity: .85; }
+  .back .note-line { margin-top: 4px; font-size: 11px; color: #ffe08a; min-height: 13px; }
+  .speak {
+    margin-top: 10px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+    color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 17px;
+    cursor: pointer; transition: background .2s;
+  }
+  .speak:hover:not(:disabled) { background: rgba(255,255,255,.32); }
+  .speak:disabled { opacity: .35; cursor: default; }
+  .next-btn {
+    width: 100%; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4);
+    color: #fff; padding: 11px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .next-btn:hover { background: rgba(255,255,255,.28); }
+
+  /* 弹窗 */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    display: flex; align-items: center; justify-content: center; z-index: 100;
+    backdrop-filter: blur(3px); padding: 16px;
+  }
+  .modal {
+    background: #fff; color: #2d3436; border-radius: 16px;
+    padding: 24px; max-width: 380px; width: 100%; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3); max-height: 92vh; overflow-y: auto;
+  }
+  .modal h3 { font-size: 18px; margin-bottom: 12px; }
+  .modal p { font-size: 13.5px; line-height: 1.65; color: #636e72; }
+  .modal .lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 12px; }
+  .modal .mode-grid { display: grid; gap: 9px; margin-top: 12px; }
+  .modal .lang-btn {
+    border: 2px solid #dfe6e9; background: #fafbfc; border-radius: 10px;
+    padding: 13px 8px; cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: all .2s; color: #2d3436; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .modal .lang-btn:hover { border-color: #0984e3; background: #e8f4fd; }
+  .modal .lang-btn .wt {
+    font-size: 11px; font-weight: 700; color: #0984e3; background: #e8f4fd;
+    border-radius: 20px; padding: 2px 8px;
+  }
+  .modal .modal-actions { display: flex; gap: 9px; margin-top: 16px; }
+  .modal .modal-actions button {
+    flex: 1; border: none; border-radius: 10px; padding: 11px;
+    font-size: 14px; cursor: pointer; font-weight: 600; font-family: inherit;
+  }
+  .modal .btn-ghost { background: #f1f2f6; color: #636e72; }
+  .modal .btn-restart { background: #0984e3; color: #fff; }
+  .modal .btn-clear { background: #ffeaea; color: #c0392b; }
+
+  .score-box { display: flex; gap: 10px; margin-top: 14px; }
+  .score-cell { flex: 1; background: #f7f9fc; border-radius: 12px; padding: 12px 8px; }
+  .score-cell .k { font-size: 11px; color: #95a5a6; letter-spacing: .5px; }
+  .score-cell .v { font-size: 24px; font-weight: 800; color: #0984e3; margin-top: 3px; }
+  .score-cell.total .v { color: #e17055; }
+
+  .demo-box { background: #f7f9fc; border-radius: 12px; padding: 14px 10px; margin-top: 12px; }
+  .demo-word { font-size: 28px; font-weight: 700; letter-spacing: 2px; color: #2b2b3a; }
+  .demo-blanks { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+  .demo-blanks .pinyin-input { width: 80px; height: 40px; }
+  .demo-msg { margin-top: 8px; font-size: 13px; min-height: 18px; font-weight: 600; color: #27ae60; }
+  .demo-msg.err { color: #e74c3c; }
+  .tip-box {
+    margin-top: 12px; background: #fff8e6; border: 1px solid #ffe0a3;
+    border-radius: 10px; padding: 9px 11px; font-size: 12.5px; line-height: 1.6;
+    color: #8a6d1f; text-align: left;
+  }
+  .tip-box b { color: #b26a00; }
+
+  @media (max-height: 740px) {
+    :root { --card-h: 420px; }
+    .emoji { font-size: 46px; }
+    .listen-icon { font-size: 66px; }
+    .w1 { font-size: 28px; } .w2 { font-size: 22px; } .w3 { font-size: 18px; }
+    .bw1 { font-size: 44px; } .bw2 { font-size: 34px; } .bw3 { font-size: 26px; }
+    .pinyin-input { height: 36px; }
+    .blanks { gap: 5px; margin-top: 10px; }
+    .counter { margin-bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+  <a href="../index.html" style="position:fixed;top:9px;left:12px;z-index:20;color:#fff;text-decoration:none;font-size:12px;background:#19235c77;border-radius:9px;padding:7px 11px;">← Leçons</a>
+  <div id="errBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#c0392b;color:#fff;padding:10px 14px;font-size:13px;line-height:1.5;text-align:left;"></div>
+  <div class="title" id="title"></div>
+  <div class="counter">
+    <b id="done">0</b> / <b id="total">0</b>
+    <span class="sep">·</span>
+    <span class="score-line" id="scoreLine"></span>
+  </div>
+
+  <div class="stage">
+    <div class="card-wrapper" id="cardWrapper">
+      <div class="card" id="card">
+        <div class="face front" id="front"></div>
+        <div class="face back" id="back"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 偏好语言 -->
+  <div class="modal-overlay" id="langModal">
+    <div class="modal">
+      <h3>Choisis ta langue / Choose your language</h3>
+      <div class="lang-grid" id="langGrid"></div>
+    </div>
+  </div>
+
+  <!-- 教程 -->
+  <div class="modal-overlay" id="tutModal" style="display:none;">
+    <div class="modal">
+      <h3 id="tutTitle"></h3>
+      <p id="tutBody"></p>
+      <div class="demo-box">
+        <div class="demo-word"><span>你好</span><button class="speak" id="tutSpeak" style="margin-left:10px;">🔊</button></div>
+        <div class="demo-blanks">
+          <input class="pinyin-input" id="demo1" inputmode="latin" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="8">
+          <input class="pinyin-input" id="demo2" inputmode="latin" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="8">
+        </div>
+        <div class="demo-msg" id="demoMsg"></div>
+        <div class="modal-actions" style="margin-top:10px;">
+          <button class="btn-restart" id="demoOk">OK</button>
+        </div>
+      </div>
+      <div class="tip-box" id="tutTip"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="tutSkip"></button>
+        <button class="btn-restart" id="tutStart"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 选择模式 -->
+  <div class="modal-overlay" id="modeModal" style="display:none;">
+    <div class="modal">
+      <h3 id="modeTitle"></h3>
+      <div class="mode-grid" id="modeGrid"></div>
+      <div class="modal-actions">
+        <button class="btn-clear" id="btnClearMode"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本轮结束 -->
+  <div class="modal-overlay" id="endModal" style="display:none;">
+    <div class="modal">
+      <h3 id="endTitle"></h3>
+      <div class="score-box">
+        <div class="score-cell"><div class="k" id="endRoundK"></div><div class="v" id="endRoundV">0</div></div>
+        <div class="score-cell total"><div class="k" id="endTotalK"></div><div class="v" id="endTotalV">0</div></div>
+      </div>
+      <p style="margin-top:14px;" id="endHint"></p>
+      <div class="mode-grid" id="endModeGrid"></div>
+      <div class="modal-actions">
+        <button class="btn-clear" id="btnClearEnd"></button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const VOICE_PACK = {} || {};
+/* ================= 卡片数据（音节数组由生成器预先算好） ================= */
+const DATA = {"title":"Leçon 1 · Phrases","cards":[{"zh":"你好吗？","pinyin":"nǐ hǎo ma?","syl":["ni","hao","ma"],"emoji":"🙂","tr":{"en":"How are you?","fr":"Comment vas-tu ?","es":"¿Cómo estás?","ru":"Как дела?","ar":"كيف حالك؟"}},{"zh":"我很好。","pinyin":"wǒ hěn hǎo","syl":["wo","hen","hao"],"emoji":"😊","tr":{"en":"I am fine.","fr":"Je vais bien.","es":"Estoy bien.","ru":"У меня всё хорошо.","ar":"أنا بخير."}},{"zh":"谢谢你。","pinyin":"xiè xie nǐ","syl":["xie","xie","ni"],"emoji":"🙏","tr":{"en":"Thank you.","fr":"Merci à toi.","es":"Gracias.","ru":"Спасибо тебе.","ar":"شكرًا لك."}},{"zh":"明天见。","pinyin":"míng tiān jiàn","syl":["ming","tian","jian"],"emoji":"🌅","tr":{"en":"See you tomorrow.","fr":"À demain.","es":"Hasta mañana.","ru":"Увидимся завтра.","ar":"أراك غدًا."}}]};
+const CARDS = DATA.cards;
+document.getElementById('title').textContent = (DATA && DATA.title) || '闪卡';
+
+
+const WEIGHTS = { translation:1, pinyin:2, listening:3, hanzi:4 };
+const MAX_TOLERANCE = 3;   // 整个会话内，「看过背面后仍可记分」的次数
+
+/* ================= 文案 ================= */
+const I18N = {
+  en: {
+    title:'Class Flashcards',
+    chooseLang:'Choose your preferred language',
+    chooseMode:'Choose a mode',
+    modes:{ translation:'Translation', pinyin:'Pinyin', hanzi:'Hanzi', listening:'Listening' },
+    zhLabel:'Chinese',
+    ok:'OK', skip:'Skip', next:'Next card',
+    fillAll:'Fill in every blank first',
+    correct:'Correct: {c}/{t}', answer:'Answer: ',
+    dontKnow:"Don't know", unsure:'Unsure', know:'Know',
+    thisRound:'This round {s}', totalAll:'Total {s}',
+    roundEnd:'Round finished', roundScore:'This round', totalScore:'Total',
+    endHint:'Pick a mode for the next round. Your total score keeps adding up.',
+    clear:'Clear score', restart:'Start again',
+    cleared:'Score cleared.',
+    tutTitle:'Try Pinyin mode', tutBody:'Type the pinyin for each syllable, then tap OK. No tone marks needed.',
+    tutTip:'<b>Tip:</b> ü can be typed as <b>v</b> (nǚ → nv). Typing <b>u</b> is not accepted. Upper case and spaces are ignored.',
+    demoOk:'Great! That is how it works.', demoSame:'Not yet, try again',
+    tutTitleHanzi:'Try Hanzi mode', tutBodyHanzi:'You see the Chinese characters. Type the pinyin for each syllable, then tap OK.',
+    tutSkip:'Skip', tutStart:'Start',
+    peekUsed:'Peeked. Free answers left: {n}', peekZero:'Peeked, so no score this time.',
+    zero:'No score'
+  },
+  fr: {
+    title:'Cartes de classe',
+    zhLabel:'Chinois',
+    chooseLang:'Choose your preferred language',
+    chooseMode:'Choisissez un mode',
+    modes:{ translation:'Traduction', pinyin:'Pinyin', hanzi:'Caractères', listening:'Écoute' },
+    ok:'OK', skip:'Passer', next:'Carte suivante',
+    fillAll:'Remplissez toutes les cases',
+    correct:'Correct : {c}/{t}', answer:'Réponse : ',
+    dontKnow:'Je ne sais pas', unsure:'Incertain', know:'Je sais',
+    thisRound:'Cette manche {s}', totalAll:'Total {s}',
+    roundEnd:'Manche terminée', roundScore:'Cette manche', totalScore:'Total',
+    endHint:'Choisissez un mode pour la manche suivante. Le total continue de s’additionner.',
+    clear:'Réinitialiser', restart:'Recommencer',
+    cleared:'Score réinitialisé.',
+    tutTitle:'Essayez le mode Pinyin', tutBody:'Tapez le pinyin de chaque syllabe, puis appuyez sur OK. Les tons ne sont pas nécessaires.',
+    tutTip:'<b>Astuce :</b> ü peut s’écrire <b>v</b> (nǚ → nv). La lettre <b>u</b> n’est pas acceptée. La casse et les espaces sont ignorés.',
+    demoOk:'Parfait, c’est le principe.', demoSame:'Pas encore, réessayez',
+    tutTitleHanzi:'Essayez le mode Caractères', tutBodyHanzi:'Vous voyez les caractères chinois. Tapez le pinyin de chaque syllabe, puis appuyez sur OK.',
+    tutSkip:'Passer', tutStart:'Commencer',
+    peekUsed:'Aperçu utilisé. Réponses libres restantes : {n}', peekZero:'Aperçu : pas de point cette fois.',
+    zero:'Sans point'
+  },
+  es: {
+    title:'Tarjetas de clase',
+    zhLabel:'Chino',
+    chooseLang:'Choose your preferred language',
+    chooseMode:'Elige un modo',
+    modes:{ translation:'Traducción', pinyin:'Pinyin', hanzi:'Caracteres', listening:'Escucha' },
+    ok:'OK', skip:'Saltar', next:'Siguiente tarjeta',
+    fillAll:'Rellena todas las casillas',
+    correct:'Correctas: {c}/{t}', answer:'Respuesta: ',
+    dontKnow:'No lo sé', unsure:'No estoy seguro/a', know:'Lo sé',
+    thisRound:'Esta ronda {s}', totalAll:'Total {s}',
+    roundEnd:'Ronda terminada', roundScore:'Esta ronda', totalScore:'Total',
+    endHint:'Elige un modo para la siguiente ronda. El total sigue sumando.',
+    clear:'Borrar puntos', restart:'Empezar de nuevo',
+    cleared:'Puntos borrados.',
+    tutTitle:'Prueba el modo Pinyin', tutBody:'Escribe el pinyin de cada sílaba y pulsa OK. No hacen falta los tonos.',
+    tutTip:'<b>Consejo:</b> ü se puede escribir como <b>v</b> (nǚ → nv). La letra <b>u</b> no se acepta. No importan las mayúsculas ni los espacios.',
+    demoOk:'¡Bien! Así funciona.', demoSame:'Aún no, inténtalo otra vez',
+    tutTitleHanzi:'Prueba el modo Caracteres', tutBodyHanzi:'Ves los caracteres chinos. Escribe el pinyin de cada sílaba y pulsa OK.',
+    tutSkip:'Saltar', tutStart:'Empezar',
+    peekUsed:'Viste la respuesta. Respuestas libres restantes: {n}', peekZero:'Viste la respuesta: sin puntos esta vez.',
+    zero:'Sin puntos'
+  },
+  ru: {
+    title:'Карточки для класса',
+    zhLabel:'Китайский',
+    chooseLang:'Choose your preferred language',
+    chooseMode:'Выберите режим',
+    modes:{ translation:'Перевод', pinyin:'Пиньинь', hanzi:'Иероглифы', listening:'Аудирование' },
+    ok:'OK', skip:'Пропустить', next:'Следующая карточка',
+    fillAll:'Заполните все поля',
+    correct:'Верно: {c}/{t}', answer:'Ответ: ',
+    dontKnow:'Не знаю', unsure:'Не уверен(а)', know:'Знаю',
+    thisRound:'Этот круг {s}', totalAll:'Всего {s}',
+    roundEnd:'Круг завершён', roundScore:'Этот круг', totalScore:'Всего',
+    endHint:'Выберите режим для следующего круга. Общий счёт продолжает расти.',
+    clear:'Сбросить счёт', restart:'Начать заново',
+    cleared:'Счёт сброшен.',
+    tutTitle:'Попробуйте режим пиньинь', tutBody:'Впишите пиньинь каждого слога и нажмите OK. Тоны не нужны.',
+    tutTip:'<b>Подсказка:</b> ü можно писать как <b>v</b> (nǚ → nv). Буква <b>u</b> не принимается. Регистр и пробелы не важны.',
+    demoOk:'Отлично! Так это и работает.', demoSame:'Пока нет, попробуйте ещё',
+    tutTitleHanzi:'Попробуйте режим иероглифов', tutBodyHanzi:'Вы видите иероглифы. Впишите пиньинь каждого слога и нажмите OK.',
+    tutSkip:'Пропустить', tutStart:'Начать',
+    peekUsed:'Подсмотрели. Бесплатных ответов осталось: {n}', peekZero:'Подсмотрели: в этот раз без баллов.',
+    zero:'Без баллов'
+  },
+  ar: {
+    title:'بطاقات الصف',
+    zhLabel:'الصينية',
+    chooseLang:'Choose your preferred language',
+    chooseMode:'اختر وضعًا',
+    modes:{ translation:'الترجمة', pinyin:'بينيين', hanzi:'الحروف', listening:'الاستماع' },
+    ok:'OK', skip:'تخطي', next:'البطاقة التالية',
+    fillAll:'املأ كل الخانات أولاً',
+    correct:'صحيح: {c}/{t}', answer:'الجواب: ',
+    dontKnow:'لا أعرف', unsure:'غير متأكد', know:'أعرف',
+    thisRound:'هذه الجولة {s}', totalAll:'المجموع {s}',
+    roundEnd:'انتهت الجولة', roundScore:'هذه الجولة', totalScore:'المجموع',
+    endHint:'اختر وضعًا للجولة التالية. المجموع يزداد باستمرار.',
+    clear:'تصفير النقاط', restart:'ابدأ من جديد',
+    cleared:'تم تصفير النقاط.',
+    tutTitle:'جرّب وضع البينيين', tutBody:'اكتب بينيين كل مقطع ثم اضغط OK. لا حاجة لعلامات النبرة.',
+    tutTip:'<b>تلميح:</b> يمكن كتابة ü على شكل <b>v</b> (nǚ → nv). الحرف <b>u</b> غير مقبول. لا يهم الحرف الكبير ولا المسافات.',
+    demoOk:'أحسنت! هكذا يعمل.', demoSame:'ليس بعد، حاول مرة أخرى',
+    tutTitleHanzi:'جرّب وضع الحروف', tutBodyHanzi:'ترى الحروف الصينية. اكتب بينيين كل مقطع ثم اضغط OK.',
+    tutSkip:'تخطي', tutStart:'ابدأ',
+    peekUsed:'تم الاطلاع على الجواب. الإجابات المجانية المتبقية: {n}', peekZero:'تم الاطلاع: لا نقاط هذه المرة.',
+    zero:'بلا نقاط'
+  }
+};
+const LANG_LIST = [
+  { code:'en', name:'English' }, { code:'fr', name:'Français' }, { code:'es', name:'Español' },
+  { code:'ru', name:'Русский' }, { code:'ar', name:'العربية' }
+];
+
+/* ================= 语音（内嵌 mp3，不依赖系统 TTS） ================= */
+const audioEl = new Audio();
+audioEl.preload = 'auto';
+function speak(text) {
+  const src = VOICE_PACK[text];
+  if (!src) {
+    if ('speechSynthesis' in window) {
+      try {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'zh-CN';
+        utterance.rate = 0.85;
+        speechSynthesis.speak(utterance);
+      } catch (e) {}
+    }
+    return;
+  }
+  try {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+    audioEl.src = src;
+    audioEl.play().catch(() => {});
+  } catch (e) {}
+}
+
+/* ================= 状态 ================= */
+let preferredLang = 'en';
+let curMode = 'translation';
+let deck = [];
+let roundTotal = 0;
+let doneCount = 0;
+let roundScore = 0;
+let totalScore = 0;
+let toleranceLeft = MAX_TOLERANCE;
+let judged = false;
+let peeked = false;
+let transitioning = false;
+let inputs = [];
+const seenTut = { pinyin:false, hanzi:false };
+
+const cardEl = document.getElementById('card');
+const wrapperEl = document.getElementById('cardWrapper');
+const frontEl = document.getElementById('front');
+const backEl = document.getElementById('back');
+const doneEl = document.getElementById('done');
+const totalEl = document.getElementById('total');
+const scoreLineEl = document.getElementById('scoreLine');
+
+function t(k) {
+  const d = I18N[preferredLang] || I18N.en;
+  return (d[k] !== undefined ? d[k] : I18N.en[k]);
+}
+function tn(mode) { return t('modes')[mode]; }
+function isRTL() { return preferredLang === 'ar'; }
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function norm(s) {
+  // 用 ’ 写 curly apostrophe，- 放末尾：避免老浏览器/Edge 对字符类解析差异
+  let v = String(s).toLowerCase().replace(/[s'’·,.;:!?，。；：！？-]/g, '')
+    .replace(/v/g, 'ü').replace(/u:/g, 'ü')
+    .replace(/[āáǎà]/g, 'a').replace(/[ēéěè]/g, 'e').replace(/[īíǐì]/g, 'i')
+    .replace(/[ōóǒò]/g, 'o').replace(/[ūúǔù]/g, 'u').replace(/[ǖǘǚǜ]/g, 'ü');
+  v = v.replace(/^(j|q|x|y)ü/, '$1u');
+  return v;
+}
+function fmt(n) { return String(Math.round(n * 10) / 10); }
+
+// 按长度自动缩字号
+function sizeClass(text, back) {
+  const n = String(text).length;
+  const p = back ? 'b' : '';
+  if (n <= 9) return p + 'w1';
+  if (n <= 15) return p + 'w2';
+  if (n <= 24) return p + 'w3';
+  if (n <= 40) return p + 'w4';
+  return p + 'w5';
+}
+function blankDensity(n) { return n >= 10 ? 'xdense' : (n >= 7 ? 'dense' : ''); }
+
+const WEIGHT_LABEL = '×';
+
+/* ================= 轮次 ================= */
+function startRound(mode) {
+  curMode = mode;
+  deck = shuffle(CARDS.slice());
+  deck.forEach(c => { c._skip = 0; c._peeked = false; });
+  roundTotal = deck.length;
+  doneCount = 0;
+  roundScore = 0;
+  resetCard();
+  updateHUD();
+  render();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function updateHUD() {
+  doneEl.textContent = doneCount;
+  totalEl.textContent = roundTotal;
+  scoreLineEl.textContent = t('thisRound').replace('{s}', fmt(roundScore)) + ' · ' + t('totalAll').replace('{s}', fmt(totalScore));
+}
+
+function resetCard() {
+  cardEl.style.transition = 'none';
+  cardEl.classList.remove('flipped');
+  void cardEl.offsetWidth;
+  cardEl.style.transition = '';
+}
+
+/* ================= 渲染正面 ================= */
+function render() {
+  if (!deck.length) { endRound(); return; }
+  const c = deck[0];
+  judged = false;
+  peeked = !!c._peeked;        // 偷看标记本轮不清除（防止偷看后跳走再白拿分）
+  const skipVisible = c._skip < 1;
+
+  let f = '';
+  if (curMode === 'translation') {
+    const en = c.tr.en || '';
+    const pref = preferredLang !== 'en' ? (c.tr[preferredLang] || '') : '';
+    f += '<div class="content">';
+    if (c.emoji) f += '<div class="emoji">' + c.emoji + '</div>';
+    f += '<div class="word ' + sizeClass(en) + '">' + escapeHtml(en) + '</div>';
+    if (pref) f += '<div class="sub">' + escapeHtml(pref) + '</div>';
+    f += '</div>';
+    f += '<div class="controls">' + rateRowHTML(skipVisible) + '</div>';
+
+  } else if (curMode === 'listening') {
+    f += '<div class="content">';
+    f += '<div class="listen-icon" id="listenIcon">🔊</div>';
+    f += '</div>';
+    f += '<div class="controls">' + rateRowHTML(skipVisible) + '</div>';
+
+  } else if (curMode === 'pinyin') {
+    const en = c.tr.en || '';
+    const pref = preferredLang !== 'en' ? (c.tr[preferredLang] || '') : '';
+    f += '<div class="content">';
+    if (c.emoji) f += '<div class="emoji">' + c.emoji + '</div>';
+    f += '<div class="word ' + sizeClass(en) + '">' + escapeHtml(en) + '</div>';
+    if (pref) f += '<div class="sub">' + escapeHtml(pref) + '</div>';
+    f += blanksHTML(c);
+    f += '<div class="tip-line" id="tipLine"></div>';
+    f += '</div>';
+    f += '<div class="controls">' + okRowHTML(skipVisible) + '</div>';
+
+  } else { // hanzi
+    f += '<div class="content">';
+    if (c.emoji) f += '<div class="emoji">' + c.emoji + '</div>';
+    f += '<div class="word ' + sizeClass(c.zh) + '">' + escapeHtml(c.zh) + '</div>';
+    f += blanksHTML(c);
+    f += '<div class="tip-line" id="tipLine"></div>';
+    f += '</div>';
+    f += '<div class="controls">' + okRowHTML(skipVisible) + '</div>';
+  }
+
+  frontEl.innerHTML = f;
+  frontEl.setAttribute('dir', isRTL() ? 'rtl' : 'ltr');
+  backEl.innerHTML = peekBackHTML(c);          // 预渲染答案，供偷看
+  backEl.setAttribute('dir', isRTL() ? 'rtl' : 'ltr');
+  bindFront(c);
+  bindSpeak(c);
+}
+
+function rateRowHTML(skipVisible) {
+  return '<div class="btn-row">' +
+    '<button class="rate-btn red" data-v="0">' + escapeHtml(t('dontKnow')) + '</button>' +
+    '<button class="rate-btn yellow" data-v="0">' + escapeHtml(t('unsure')) + '</button>' +
+    '<button class="rate-btn green" data-v="1">' + escapeHtml(t('know')) + '</button>' +
+    '</div>' +
+    (skipVisible ? '<button class="skip-link" id="skipBtn">' + escapeHtml(t('skip')) + '</button>' : '');
+}
+
+function okRowHTML(skipVisible) {
+  return '<div class="btn-row"><button class="ok-btn" id="okBtn">' + escapeHtml(t('ok')) + '</button></div>' +
+    (skipVisible ? '<button class="skip-link" id="skipBtn">' + escapeHtml(t('skip')) + '</button>' : '');
+}
+
+function blanksHTML(c) {
+  const den = blankDensity(c.syl.length);
+  let h = '<div class="blanks ' + den + '">';
+  c.syl.forEach((s, i) => {
+    h += '<input class="pinyin-input" data-i="' + i + '" inputmode="latin" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="10">';
+  });
+  h += '</div>';
+  return h;
+}
+
+function bindFront(c) {
+  inputs = Array.from(frontEl.querySelectorAll('.pinyin-input'));
+  inputs.forEach(inp => {
+    inp.addEventListener('click', e => e.stopPropagation());
+    inp.addEventListener('input', () => {
+      const tip = document.getElementById('tipLine');
+      if (tip) tip.textContent = '';
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); submitInput(c); }
+    });
+  });
+  frontEl.querySelectorAll('.rate-btn').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      submitRaw(parseFloat(b.getAttribute('data-v')), null, null);
+    });
+  });
+  const ok = document.getElementById('okBtn');
+  if (ok) ok.addEventListener('click', e => { e.stopPropagation(); submitInput(c); });
+  const skip = document.getElementById('skipBtn');
+  if (skip) skip.addEventListener('click', e => { e.stopPropagation(); doSkip(); });
+  const li = document.getElementById('listenIcon');
+  if (li) li.addEventListener('click', e => { e.stopPropagation(); speak(c.zh); });
+}
+
+/* ================= 提交与判定 ================= */
+function submitInput(c) {
+  if (judged) return;
+  const empties = inputs.filter(i => i.value.trim() === '');
+  if (empties.length) {
+    const tip = document.getElementById('tipLine');
+    if (tip) tip.textContent = t('fillAll');
+    empties[0].focus();
+    return;
+  }
+  const results = inputs.map((inp, i) => norm(inp.value) === norm(c.syl[i]));
+  const raw = results.filter(Boolean).length / results.length;
+  submitRaw(raw, results, c);
+}
+
+function submitRaw(raw, results, c) {
+  if (judged) return;
+  judged = true;
+  const card = deck[0];
+
+  // 容错：看过背面后作答
+  let scored = raw;
+  let note = '';
+  if (peeked) {
+    if (toleranceLeft > 0) {
+      toleranceLeft--;
+      note = t('peekUsed').replace('{n}', toleranceLeft);
+    } else {
+      scored = 0;
+      note = t('peekZero');
+    }
+  }
+
+  const gained = scored * WEIGHTS[curMode];
+  roundScore += gained;
+  totalScore += gained;
+  doneCount++;
+
+  // 标记输入框
+  if (inputs.length) {
+    inputs.forEach((inp, i) => {
+      inp.classList.remove('bad', 'miss');
+      inp.classList.add(results && results[i] ? 'ok' : 'bad');
+      inp.readOnly = true;
+    });
+  }
+  updateHUD();
+  backEl.innerHTML = scoredBackHTML(card, gained, note, results);
+  backEl.setAttribute('dir', isRTL() ? 'rtl' : 'ltr');
+  bindBack(card);
+  setTimeout(() => { cardEl.classList.add('flipped'); }, 380);
+}
+
+function bindSpeak(c) {
+  const sb = document.getElementById('speakBtn');
+  if (sb) sb.addEventListener('click', e => { e.stopPropagation(); speak(c.zh); });
+}
+
+function answerBodyHTML(c) {
+  let h = '';
+  if (curMode === 'pinyin' || curMode === 'translation') {
+    h += '<div class="label">' + escapeHtml(t('zhLabel')) + '</div>';
+    h += '<div class="meaning ' + sizeClass(c.zh, true) + '">' + escapeHtml(c.zh) + '</div>';
+    h += '<div class="pinyin">' + escapeHtml(c.pinyin) + '</div>';
+  } else if (curMode === 'listening') {
+    h += '<div class="meaning ' + sizeClass(c.zh, true) + '">' + escapeHtml(c.zh) + '</div>';
+    h += '<div class="pinyin">' + escapeHtml(c.pinyin) + '</div>';
+    h += '<div class="explain">' + escapeHtml(c.tr.en || '') + '</div>';
+    if (preferredLang !== 'en' && c.tr[preferredLang]) h += '<div class="explain">' + escapeHtml(c.tr[preferredLang]) + '</div>';
+  } else { // hanzi
+    h += '<div class="pinyin" style="font-size:22px;margin-top:0;">' + escapeHtml(c.pinyin) + '</div>';
+    const ex = c.tr[preferredLang] || c.tr.en || '';
+    if (ex) h += '<div class="explain">' + escapeHtml(ex) + '</div>';
+  }
+  return h;
+}
+
+function speakBtnHTML(c) {
+  return '<button class="speak" id="speakBtn">🔊</button>';
+}
+
+// 偷看时看到的背面：只有答案，没有得分和「下一张」
+function peekBackHTML(c) {
+  return '<div class="content">' + answerBodyHTML(c) + speakBtnHTML(c) + '</div>';
+}
+
+// 作答后的背面：答案 + 本题得分 + 容错提示 + 下一张
+function scoredBackHTML(c, gained, note, results) {
+  let h = '<div class="content">' + answerBodyHTML(c);
+  if (results) {
+    h += '<div class="result-line">' + t('correct').replace('{c}', results.filter(Boolean).length).replace('{t}', results.length) + '</div>';
+  }
+  h += '<div class="result-line" style="font-weight:700;color:#8ef0c0;">+' + fmt(gained) + '</div>';
+  h += '<div class="note-line">' + escapeHtml(note) + '</div>';
+  h += speakBtnHTML(c);
+  h += '</div>';
+  h += '<div class="controls"><button class="next-btn" id="nextBtn">' + escapeHtml(t('next')) + '</button></div>';
+  return h;
+}
+
+function bindBack(c) {
+  const sb = document.getElementById('speakBtn');
+  if (sb) sb.addEventListener('click', e => { e.stopPropagation(); speak(c.zh); });
+  const nb = document.getElementById('nextBtn');
+  if (nb) nb.addEventListener('click', e => { e.stopPropagation(); advance(); });
+}
+
+/* ================= 跳过 / 前进 ================= */
+function doSkip() {
+  if (transitioning || judged || !deck.length) return;
+  const c = deck[0];
+  if (c._skip >= 1) return;       // 每卡每轮最多跳 1 次
+  c._skip++;
+  deck.shift();
+  deck.push(c);                   // 移到队尾，后面还会出现，但不给回看
+  slideNext();
+}
+
+function advance() {
+  if (transitioning || !deck.length) return;
+  deck.shift();                    // 已作答，移出本轮
+  if (!deck.length) { updateHUD(); endRound(); return; }
+  slideNext();
+}
+
+function slideNext() {
+  transitioning = true;
+  resetCard();
+  wrapperEl.style.transform = 'translateX(-120%)';
+  setTimeout(() => {
+    updateHUD();
+    render();
+    wrapperEl.style.transition = 'none';
+    wrapperEl.style.transform = 'translateX(120%)';
+    void wrapperEl.offsetWidth;
+    wrapperEl.style.transition = '';
+    wrapperEl.style.transform = 'translateX(0)';
+    setTimeout(() => { transitioning = false; }, 280);
+  }, 250);
+}
+
+function flip() {
+  if (transitioning || judged) return;
+  // 一旦翻到背面看过答案，本张卡本轮内就算「已偷看」，跳走再回来也不撤销
+  if (!cardEl.classList.contains('flipped')) {
+    peeked = true;
+    if (deck[0]) deck[0]._peeked = true;
+  }
+  cardEl.classList.toggle('flipped');
+}
+document.getElementById('card').addEventListener('click', flip);
+
+/* ================= 轮次结束 ================= */
+function endRound() {
+  document.getElementById('endTitle').textContent = t('roundEnd');
+  document.getElementById('endRoundK').textContent = t('roundScore');
+  document.getElementById('endRoundV').textContent = fmt(roundScore);
+  document.getElementById('endTotalK').textContent = t('totalScore');
+  document.getElementById('endTotalV').textContent = fmt(totalScore);
+  document.getElementById('endHint').textContent = t('endHint');
+  buildModeButtons(document.getElementById('endModeGrid'), chooseMode);
+  document.getElementById('btnClearEnd').textContent = t('clear');
+  document.getElementById('endModal').style.display = 'flex';
+}
+
+document.getElementById('btnClearEnd').addEventListener('click', () => {
+  totalScore = 0;
+  roundScore = 0;
+  document.getElementById('endRoundV').textContent = fmt(roundScore);
+  document.getElementById('endTotalV').textContent = fmt(totalScore);
+  document.getElementById('endHint').textContent = t('cleared');
+  updateHUD();
+});
+
+/* ================= 模式选择 ================= */
+function buildModeButtons(container, onClick) {
+  container.innerHTML = '';
+  ['translation', 'pinyin', 'listening', 'hanzi'].forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'lang-btn';
+    b.innerHTML = '<span>' + escapeHtml(tn(m)) + '</span><span class="wt">' + WEIGHT_LABEL + WEIGHTS[m] + '</span>';
+    b.addEventListener('click', () => onClick(m));
+    container.appendChild(b);
+  });
+}
+
+// 统一入口：选模式 → （汉字模式首次弹演示）→ 开一轮
+function chooseMode(m) {
+  document.getElementById('modeModal').style.display = 'none';
+  document.getElementById('endModal').style.display = 'none';
+  if (m === 'hanzi' && !seenTut.hanzi) {
+    seenTut.hanzi = true;
+    openTutorial('hanzi', () => startRound(m));
+    return;
+  }
+  startRound(m);
+}
+
+buildModeButtons(document.getElementById('modeGrid'), chooseMode);
+buildModeButtons(document.getElementById('endModeGrid'), chooseMode);
+document.getElementById('btnClearMode').style.display = 'none';
+
+/* ================= 教程 ================= */
+const tutModal = document.getElementById('tutModal');
+const demo1 = document.getElementById('demo1');
+const demo2 = document.getElementById('demo2');
+const demoMsg = document.getElementById('demoMsg');
+const demoOkBtn = document.getElementById('demoOk');
+let afterTutorial = null;
+
+function demoCheck() {
+  const ok1 = norm(demo1.value) === 'ni';
+  const ok2 = norm(demo2.value) === 'hao';
+  demo1.classList.toggle('ok', ok1); demo1.classList.toggle('bad', demo1.value.trim() !== '' && !ok1);
+  demo2.classList.toggle('ok', ok2); demo2.classList.toggle('bad', demo2.value.trim() !== '' && !ok2);
+  if (ok1 && ok2) { demoMsg.textContent = t('demoOk'); demoMsg.classList.remove('err'); }
+  else if (demo1.value.trim() !== '' || demo2.value.trim() !== '') { demoMsg.textContent = t('demoSame'); demoMsg.classList.add('err'); }
+  else { demoMsg.textContent = ''; }
+}
+
+function openTutorial(mode, cb) {
+  const isHanzi = mode === 'hanzi';
+  document.getElementById('tutTitle').textContent = t(isHanzi ? 'tutTitleHanzi' : 'tutTitle');
+  document.getElementById('tutBody').textContent = t(isHanzi ? 'tutBodyHanzi' : 'tutBody');
+  document.getElementById('tutTip').innerHTML = t('tutTip');
+  document.getElementById('tutSkip').textContent = t('tutSkip');
+  document.getElementById('tutStart').textContent = t('tutStart');
+  demo1.value = ''; demo2.value = '';
+  demo1.className = 'pinyin-input'; demo2.className = 'pinyin-input';
+  demoMsg.textContent = ''; demoMsg.classList.remove('err');
+  tutModal.querySelector('.modal').setAttribute('dir', isRTL() ? 'rtl' : 'ltr');
+  afterTutorial = cb || null;
+  tutModal.style.display = 'flex';
+}
+
+// 教程：只有点 OK 才判定正误；输入时只清掉旧提示
+function demoClear() {
+  demo1.className = 'pinyin-input';
+  demo2.className = 'pinyin-input';
+  demoMsg.textContent = '';
+  demoMsg.classList.remove('err');
+}
+demo1.addEventListener('input', demoClear);
+demo2.addEventListener('input', demoClear);
+demo1.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); demo2.focus(); } });
+demo2.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); demoCheck(); } });
+demoOkBtn.addEventListener('click', demoCheck);
+document.getElementById('tutSpeak').addEventListener('click', e => { e.stopPropagation(); speak('你好'); });
+document.getElementById('tutSkip').addEventListener('click', closeTutorial);
+document.getElementById('tutStart').addEventListener('click', closeTutorial);
+function closeTutorial() {
+  tutModal.style.display = 'none';
+  const cb = afterTutorial; afterTutorial = null;
+  if (cb) cb();
+}
+
+/* ================= 语言 ================= */
+const langGrid = document.getElementById('langGrid');
+LANG_LIST.forEach(l => {
+  const b = document.createElement('button');
+  b.className = 'lang-btn';
+  b.textContent = l.name;
+  b.addEventListener('click', () => {
+    preferredLang = l.code;
+    document.getElementById('langModal').style.display = 'none';
+    document.documentElement.setAttribute('dir', isRTL() ? 'rtl' : 'ltr');
+    document.getElementById('title').textContent = (DATA && DATA.title) || t('title');
+    document.getElementById('modeTitle').textContent = t('chooseMode');
+    document.getElementById('btnClearMode').style.display = 'none';
+    document.getElementById('endTitle').textContent = t('roundEnd');
+    openTutorial('pinyin', () => {
+      document.getElementById('modeModal').style.display = 'flex';
+    });
+  });
+  langGrid.appendChild(b);
+});
+
+updateHUD();
+</script>
+</body>
+</html>

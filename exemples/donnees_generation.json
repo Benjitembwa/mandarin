@@ -1,0 +1,259 @@
+{
+  "lesson01_words": {
+    "title": "Leçon 1 · Mots",
+    "cards": [
+      {
+        "zh": "你好",
+        "pinyin": "nǐ hǎo",
+        "syl": [
+          "ni",
+          "hao"
+        ],
+        "emoji": "👋",
+        "tr": {
+          "en": "hello",
+          "fr": "bonjour",
+          "es": "hola",
+          "ru": "привет",
+          "ar": "مرحبًا"
+        }
+      },
+      {
+        "zh": "谢谢",
+        "pinyin": "xiè xie",
+        "syl": [
+          "xie",
+          "xie"
+        ],
+        "emoji": "🙏",
+        "tr": {
+          "en": "thank you",
+          "fr": "merci",
+          "es": "gracias",
+          "ru": "спасибо",
+          "ar": "شكرًا"
+        }
+      },
+      {
+        "zh": "再见",
+        "pinyin": "zài jiàn",
+        "syl": [
+          "zai",
+          "jian"
+        ],
+        "emoji": "👋",
+        "tr": {
+          "en": "goodbye",
+          "fr": "au revoir",
+          "es": "adiós",
+          "ru": "до свидания",
+          "ar": "وداعًا"
+        }
+      },
+      {
+        "zh": "老师",
+        "pinyin": "lǎo shī",
+        "syl": [
+          "lao",
+          "shi"
+        ],
+        "emoji": "👩‍🏫",
+        "tr": {
+          "en": "teacher",
+          "fr": "professeur",
+          "es": "profesor",
+          "ru": "учитель",
+          "ar": "معلم"
+        }
+      },
+      {
+        "zh": "学生",
+        "pinyin": "xué sheng",
+        "syl": [
+          "xue",
+          "sheng"
+        ],
+        "emoji": "🎓",
+        "tr": {
+          "en": "student",
+          "fr": "étudiant",
+          "es": "estudiante",
+          "ru": "студент",
+          "ar": "طالب"
+        }
+      },
+      {
+        "zh": "朋友",
+        "pinyin": "péng you",
+        "syl": [
+          "peng",
+          "you"
+        ],
+        "emoji": "🤝",
+        "tr": {
+          "en": "friend",
+          "fr": "ami",
+          "es": "amigo",
+          "ru": "друг",
+          "ar": "صديق"
+        }
+      }
+    ]
+  },
+  "lesson01_sentences": {
+    "title": "Leçon 1 · Phrases",
+    "cards": [
+      {
+        "zh": "你好吗？",
+        "pinyin": "nǐ hǎo ma?",
+        "syl": [
+          "ni",
+          "hao",
+          "ma"
+        ],
+        "emoji": "🙂",
+        "tr": {
+          "en": "How are you?",
+          "fr": "Comment vas-tu ?",
+          "es": "¿Cómo estás?",
+          "ru": "Как дела?",
+          "ar": "كيف حالك؟"
+        }
+      },
+      {
+        "zh": "我很好。",
+        "pinyin": "wǒ hěn hǎo",
+        "syl": [
+          "wo",
+          "hen",
+          "hao"
+        ],
+        "emoji": "😊",
+        "tr": {
+          "en": "I am fine.",
+          "fr": "Je vais bien.",
+          "es": "Estoy bien.",
+          "ru": "У меня всё хорошо.",
+          "ar": "أنا بخير."
+        }
+      },
+      {
+        "zh": "谢谢你。",
+        "pinyin": "xiè xie nǐ",
+        "syl": [
+          "xie",
+          "xie",
+          "ni"
+        ],
+        "emoji": "🙏",
+        "tr": {
+          "en": "Thank you.",
+          "fr": "Merci à toi.",
+          "es": "Gracias.",
+          "ru": "Спасибо тебе.",
+          "ar": "شكرًا لك."
+        }
+      },
+      {
+        "zh": "明天见。",
+        "pinyin": "míng tiān jiàn",
+        "syl": [
+          "ming",
+          "tian",
+          "jian"
+        ],
+        "emoji": "🌅",
+        "tr": {
+          "en": "See you tomorrow.",
+          "fr": "À demain.",
+          "es": "Hasta mañana.",
+          "ru": "Увидимся завтра.",
+          "ar": "أراك غدًا."
+        }
+      }
+    ]
+  },
+  "lesson02_words": {
+    "title": "Leçon 2 · Mots",
+    "cards": [
+      {
+        "zh": "苹果",
+        "pinyin": "píng guǒ",
+        "syl": [
+          "ping",
+          "guo"
+        ],
+        "emoji": "🍎",
+        "tr": {
+          "en": "apple",
+          "fr": "pomme",
+          "es": "manzana",
+          "ru": "яблоко",
+          "ar": "تفاحة"
+        }
+      },
+      {
+        "zh": "水",
+        "pinyin": "shuǐ",
+        "syl": [
+          "shui"
+        ],
+        "emoji": "💧",
+        "tr": {
+          "en": "water",
+          "fr": "eau",
+          "es": "agua",
+          "ru": "вода",
+          "ar": "ماء"
+        }
+      },
+      {
+        "zh": "面包",
+        "pinyin": "miàn bāo",
+        "syl": [
+          "mian",
+          "bao"
+        ],
+        "emoji": "🍞",
+        "tr": {
+          "en": "bread",
+          "fr": "pain",
+          "es": "pan",
+          "ru": "хлеб",
+          "ar": "خبز"
+        }
+      },
+      {
+        "zh": "茶",
+        "pinyin": "chá",
+        "syl": [
+          "cha"
+        ],
+        "emoji": "🍵",
+        "tr": {
+          "en": "tea",
+          "fr": "thé",
+          "es": "té",
+          "ru": "чай",
+          "ar": "شاي"
+        }
+      },
+      {
+        "zh": "咖啡",
+        "pinyin": "kā fēi",
+        "syl": [
+          "ka",
+          "fei"
+        ],
+        "emoji": "☕",
+        "tr": {
+          "en": "coffee",
+          "fr": "café",
+          "es": "café",
+          "ru": "кофе",
+          "ar": "قهوة"
+        }
+      }
+    ]
+  }
+}

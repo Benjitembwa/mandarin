@@ -1,0 +1,80 @@
+[
+  {
+    "zh": "苹果",
+    "pinyin": "píng guǒ",
+    "syl": [
+      "ping",
+      "guo"
+    ],
+    "emoji": "🍎",
+    "tr": {
+      "en": "apple",
+      "fr": "pomme",
+      "es": "manzana",
+      "ru": "яблоко",
+      "ar": "تفاحة"
+    }
+  },
+  {
+    "zh": "水",
+    "pinyin": "shuǐ",
+    "syl": [
+      "shui"
+    ],
+    "emoji": "💧",
+    "tr": {
+      "en": "water",
+      "fr": "eau",
+      "es": "agua",
+      "ru": "вода",
+      "ar": "ماء"
+    }
+  },
+  {
+    "zh": "面包",
+    "pinyin": "miàn bāo",
+    "syl": [
+      "mian",
+      "bao"
+    ],
+    "emoji": "🍞",
+    "tr": {
+      "en": "bread",
+      "fr": "pain",
+      "es": "pan",
+      "ru": "хлеб",
+      "ar": "خبز"
+    }
+  },
+  {
+    "zh": "茶",
+    "pinyin": "chá",
+    "syl": [
+      "cha"
+    ],
+    "emoji": "🍵",
+    "tr": {
+      "en": "tea",
+      "fr": "thé",
+      "es": "té",
+      "ru": "чай",
+      "ar": "شاي"
+    }
+  },
+  {
+    "zh": "咖啡",
+    "pinyin": "kā fēi",
+    "syl": [
+      "ka",
+      "fei"
+    ],
+    "emoji": "☕",
+    "tr": {
+      "en": "coffee",
+      "fr": "café",
+      "es": "café",
+      "ru": "кофе",
+      "ar": "قهوة"
+    }
+  }
+]
